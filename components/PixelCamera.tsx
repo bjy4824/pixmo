@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { I18N, LANGS, Lang, createT } from '@/lib/i18n'
 
+const VERSION = 'v0.4.0'
+
 type PresetMode = 'grayscale' | 'extract' | 'filter' | null
 type AppMode = 'idle' | 'camera' | 'image'
 
@@ -379,11 +381,12 @@ export default function PixelCamera() {
       setAppMode('camera')
       setStatus(createT(lang)('statusLive'))
       render()
+      setTimeout(() => extractPaletteFromFrame(), 500)
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e)
       setStatus(createT(lang)('statusAccessFail') + msg)
     }
-  }, [lang, render])
+  }, [lang, render, extractPaletteFromFrame])
 
   const flipCamera = useCallback(async () => {
     facingModeRef.current = facingModeRef.current === 'environment' ? 'user' : 'environment'
@@ -485,7 +488,7 @@ export default function PixelCamera() {
     <>
       {/* Header */}
       <div className="header">
-        <h1>PIXMO</h1>
+        <h1>PIXMO <span className="version">{VERSION}</span></h1>
         <span className="status">{status}</span>
         <select
           className="lang-select"
