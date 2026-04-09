@@ -375,7 +375,10 @@ export default function PixelCamera() {
       proc.width = 320; proc.height = 240
       const area = document.getElementById('canvasArea')
       if (area) area.style.aspectRatio = '4 / 3'
-      setIsFrontCamera(facingModeRef.current === 'user')
+      const track = stream.getVideoTracks()[0]
+      const facing = track?.getSettings?.()?.facingMode
+      // Desktop cameras don't report facingMode — treat as front (flip)
+      setIsFrontCamera(facing !== 'environment')
       setIsRunning(true)
       setSaveReady(true)
       setAppMode('camera')
