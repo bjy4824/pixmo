@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { I18N, LANGS, Lang, createT } from '@/lib/i18n'
 
-const VERSION = 'v0.4.0'
+const VERSION = 'v0.5.0'
 
 type PresetMode = 'grayscale' | 'extract' | 'filter' | null
 type AppMode = 'idle' | 'camera' | 'image'
