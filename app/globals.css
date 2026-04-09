@@ -85,6 +85,104 @@ video {
   display: block;
 }
 
+/* ── Empty state ── */
+.empty-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background: #0a0a0a;
+  z-index: 5;
+  padding: 24px;
+}
+
+.empty-pixel-icon {
+  display: grid;
+  grid-template-columns: repeat(8, 10px);
+  grid-template-rows: repeat(6, 10px);
+  gap: 2px;
+  opacity: 0.5;
+}
+
+.empty-pixel-icon span {
+  border-radius: 1px;
+}
+
+.empty-hint {
+  font-size: 0.72rem;
+  color: #444;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.empty-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 260px;
+}
+
+.empty-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: all 0.15s;
+}
+
+.empty-btn-primary {
+  background: #fff;
+  color: #0a0a0a;
+  border: none;
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+.empty-btn-primary:active { background: #ccc; }
+
+.empty-btn-secondary {
+  background: none;
+  color: #555;
+  border: 1px solid #222;
+}
+
+.empty-btn-secondary:active { border-color: #888; color: #aaa; }
+
+.empty-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #2a2a2a;
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+}
+
+.empty-divider::before,
+.empty-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #1a1a1a;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.15); }
+  50% { box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+}
+
 /* Overlay buttons on canvas */
 .canvas-overlay {
   position: absolute;

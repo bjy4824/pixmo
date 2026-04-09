@@ -1,11 +1,11 @@
 export const LANGS = ['ko', 'en', 'ja', 'zh', 'es', 'fr', 'de', 'pt'] as const
 export type Lang = (typeof LANGS)[number]
 
-type StringEntry = string
 type FnEntry = (k: number) => string
-type DictEntry = StringEntry | FnEntry
 
 interface Dict {
+  emptyHint: string
+  emptyCam: string
   statusInit: string
   secSettings: string
   secPalette: string
@@ -34,6 +34,7 @@ interface Dict {
 
 export const I18N: Record<Lang, Dict> = {
   ko: {
+    emptyHint: '사진을 픽셀 아트로 변환하세요', emptyCam: '카메라 시작',
     statusInit: '사진을 불러오세요',
     secSettings: '설정', secPalette: '팔레트',
     labelPixel: '픽셀 크기', labelContrast: '대비',
@@ -48,6 +49,7 @@ export const I18N: Record<Lang, Dict> = {
     btnStop: '■ 정지',
   },
   en: {
+    emptyHint: 'Transform photos into pixel art', emptyCam: 'Start Camera',
     statusInit: 'Load a photo',
     secSettings: 'Settings', secPalette: 'Palette',
     labelPixel: 'Pixel Size', labelContrast: 'Contrast',
@@ -62,6 +64,7 @@ export const I18N: Record<Lang, Dict> = {
     btnStop: '■ Stop',
   },
   ja: {
+    emptyHint: '写真をピクセルアートに変換', emptyCam: 'カメラ起動',
     statusInit: '写真を読み込む',
     secSettings: '設定', secPalette: 'パレット',
     labelPixel: 'ピクセル', labelContrast: 'コントラスト',
@@ -76,6 +79,7 @@ export const I18N: Record<Lang, Dict> = {
     btnStop: '■ 停止',
   },
   zh: {
+    emptyHint: '将照片转换为像素艺术', emptyCam: '启动摄像头',
     statusInit: '请加载图片',
     secSettings: '设置', secPalette: '调色板',
     labelPixel: '像素大小', labelContrast: '对比度',
@@ -90,6 +94,7 @@ export const I18N: Record<Lang, Dict> = {
     btnStop: '■ 停止',
   },
   es: {
+    emptyHint: 'Convierte fotos en pixel art', emptyCam: 'Iniciar cámara',
     statusInit: 'Carga una foto',
     secSettings: 'Ajustes', secPalette: 'Paleta',
     labelPixel: 'Tamaño pixel', labelContrast: 'Contraste',
@@ -104,6 +109,7 @@ export const I18N: Record<Lang, Dict> = {
     btnStop: '■ Parar',
   },
   fr: {
+    emptyHint: 'Transformez vos photos en pixel art', emptyCam: 'Démarrer caméra',
     statusInit: 'Charger une photo',
     secSettings: 'Réglages', secPalette: 'Palette',
     labelPixel: 'Taille pixel', labelContrast: 'Contraste',
@@ -118,6 +124,7 @@ export const I18N: Record<Lang, Dict> = {
     btnStop: '■ Arrêter',
   },
   de: {
+    emptyHint: 'Fotos in Pixel Art verwandeln', emptyCam: 'Kamera starten',
     statusInit: 'Foto laden',
     secSettings: 'Einstellungen', secPalette: 'Palette',
     labelPixel: 'Pixelgröße', labelContrast: 'Kontrast',
@@ -132,6 +139,7 @@ export const I18N: Record<Lang, Dict> = {
     btnStop: '■ Stopp',
   },
   pt: {
+    emptyHint: 'Transforme fotos em pixel art', emptyCam: 'Iniciar câmera',
     statusInit: 'Carregar foto',
     secSettings: 'Ajustes', secPalette: 'Paleta',
     labelPixel: 'Tamanho pixel', labelContrast: 'Contraste',

@@ -108,6 +108,7 @@ export default function PixelCamera() {
   const [palette, setPalette] = useState<string[]>(['#1a1a2e','#16213e','#0f3460','#e94560','#f5a623','#7ed321'])
   const [activePreset, setActivePreset] = useState<string | null>(null)
   const [inverted, setInverted] = useState(false)
+  const [appMode, setAppMode] = useState<AppMode>('idle')
   const [isRunning, setIsRunning] = useState(false)
   const [saveReady, setSaveReady] = useState(false)
   const [pixelSize, setPixelSize] = useState(1)
@@ -331,6 +332,7 @@ export default function PixelCamera() {
   const stopCamera = useCallback(() => {
     runningRef.current = false
     modeRef.current = 'idle'
+    setAppMode('idle')
     if (animIdRef.current) cancelAnimationFrame(animIdRef.current)
     const video = videoRef.current
     if (video?.srcObject) {
@@ -363,6 +365,7 @@ export default function PixelCamera() {
       if (area) area.style.aspectRatio = '4 / 3'
       setIsRunning(true)
       setSaveReady(true)
+      setAppMode('camera')
       setStatus(createT(lang)('statusLive'))
       render()
     } catch (e: unknown) {
@@ -400,6 +403,7 @@ export default function PixelCamera() {
         if (area) area.style.aspectRatio = `${WRef.current} / ${HRef.current}`
         setStatus(createT(lang)('statusLoaded'))
         setSaveReady(true)
+        setAppMode('image')
         pixelate(img)
         activePresetModeRef.current = 'extract'
         setActivePreset('preset-extract')
@@ -486,6 +490,40 @@ export default function PixelCamera() {
       <div className="canvas-area" id="canvasArea">
         <video ref={videoRef} autoPlay muted playsInline />
         <canvas ref={outputCanvasRef} id="outputCanvas" />
+
+        {/* Empty state — shown only when idle */}
+        {appMode === 'idle' && (
+          <div className="empty-state">
+            {/* Pixel art camera icon */}
+            <div className="empty-pixel-icon">
+              {[
+                0,0,0,0,0,0,0,0,
+                0,0,1,1,1,1,0,0,
+                0,1,1,2,2,1,1,0,
+                0,1,2,2,2,2,1,0,
+                0,1,1,2,2,1,1,0,
+                0,0,1,1,1,1,0,0,
+              ].map((v, i) => (
+                <span key={i} style={{
+                  background: v === 2 ? '#555' : v === 1 ? '#333' : 'transparent'
+                }} />
+              ))}
+            </div>
+
+            <p className="empty-hint">{t('emptyHint')}</p>
+
+            <div className="empty-actions">
+              <button className="empty-btn empty-btn-primary" onClick={() => fileInputRef.current?.click()}>
+                📁 {t('btnLoad')}
+              </button>
+              <div className="empty-divider">or</div>
+              <button className="empty-btn empty-btn-secondary" onClick={startCamera}>
+                📷 {t('emptyCam')}
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="canvas-overlay">
           <button className="overlay-btn flip-btn" onClick={flipCamera}>⇄</button>
           <button
