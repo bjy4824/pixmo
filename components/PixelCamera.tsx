@@ -109,6 +109,7 @@ export default function PixelCamera() {
   const [activePreset, setActivePreset] = useState<string | null>(null)
   const [inverted, setInverted] = useState(false)
   const [appMode, setAppMode] = useState<AppMode>('idle')
+  const [isFrontCamera, setIsFrontCamera] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [saveReady, setSaveReady] = useState(false)
   const [showSaveModal, setShowSaveModal] = useState(false)
@@ -347,6 +348,7 @@ export default function PixelCamera() {
       (video.srcObject as MediaStream).getTracks().forEach(t => t.stop())
       video.srcObject = null
     }
+    setIsFrontCamera(false)
     setIsRunning(false)
     setSaveReady(false)
     setStatus(createT(lang)('statusStopped'))
@@ -371,6 +373,7 @@ export default function PixelCamera() {
       proc.width = 320; proc.height = 240
       const area = document.getElementById('canvasArea')
       if (area) area.style.aspectRatio = '4 / 3'
+      setIsFrontCamera(facingModeRef.current === 'user')
       setIsRunning(true)
       setSaveReady(true)
       setAppMode('camera')
@@ -505,8 +508,10 @@ export default function PixelCamera() {
 
       {/* Canvas */}
       <div className="canvas-area" id="canvasArea">
-        <video ref={videoRef} autoPlay muted playsInline />
-        <canvas ref={outputCanvasRef} id="outputCanvas" />
+        <video ref={videoRef} autoPlay muted playsInline
+          style={isFrontCamera ? { transform: 'scaleX(-1)' } : undefined} />
+        <canvas ref={outputCanvasRef} id="outputCanvas"
+          style={isFrontCamera ? { transform: 'scaleX(-1)' } : undefined} />
 
         {/* Empty state — shown only when idle */}
         {appMode === 'idle' && (
