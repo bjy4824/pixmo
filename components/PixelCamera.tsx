@@ -111,6 +111,8 @@ export default function PixelCamera() {
   const [appMode, setAppMode] = useState<AppMode>('idle')
   const [isRunning, setIsRunning] = useState(false)
   const [saveReady, setSaveReady] = useState(false)
+  const [showSaveModal, setShowSaveModal] = useState(false)
+  const [saveFilename, setSaveFilename] = useState('pixmo')
   const [pixelSize, setPixelSize] = useState(1)
   const [contrast, setContrast] = useState(100)
   const [hueSensitivity, setHueSensitivity] = useState(70)
@@ -422,11 +424,19 @@ export default function PixelCamera() {
 
   const saveImage = useCallback(() => {
     if (!saveReady) return
+    const now = new Date()
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const defaultName = `pixmo-${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`
+    setSaveFilename(defaultName)
+    setShowSaveModal(true)
+  }, [saveReady])
+
+  const confirmSave = useCallback((filename: string) => {
     const canvas = outputCanvasRef.current
     if (!canvas) return
     const dataURL = canvas.toDataURL('image/png')
     const link = document.createElement('a')
-    link.download = `pixmo-${Date.now()}.png`
+    link.download = (filename.trim() || 'pixmo') + '.png'
     link.href = dataURL
     if (typeof link.download !== 'undefined' && !/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       document.body.appendChild(link)
@@ -435,7 +445,8 @@ export default function PixelCamera() {
     } else {
       window.open(dataURL, '_blank')
     }
-  }, [saveReady])
+    setShowSaveModal(false)
+  }, [])
 
   const updatePaletteColor = useCallback((i: number, color: string) => {
     setPalette(prev => {
@@ -645,6 +656,35 @@ export default function PixelCamera() {
       <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }}
         onChange={handleFileChange} />
       <canvas ref={processCanvasRef} style={{ display: 'none' }} />
+
+      {/* Save filename modal */}
+      {showSaveModal && (
+        <div className="save-modal-overlay" onClick={() => setShowSaveModal(false)}>
+          <div className="save-modal" onClick={e => e.stopPropagation()}>
+            <div className="save-modal-title">{t('saveModalTitle')}</div>
+            <div className="save-modal-input-row">
+              <input
+                className="save-modal-input"
+                value={saveFilename}
+                onChange={e => setSaveFilename(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && confirmSave(saveFilename)}
+                autoFocus
+                spellCheck={false}
+              />
+              <span className="save-modal-ext">.png</span>
+            </div>
+            <div className="save-modal-hint">{t('saveModalHint')}</div>
+            <div className="save-modal-actions">
+              <button className="save-modal-btn save-modal-cancel" onClick={() => setShowSaveModal(false)}>
+                {t('btnCancel')}
+              </button>
+              <button className="save-modal-btn save-modal-confirm" onClick={() => confirmSave(saveFilename)}>
+                {t('btnConfirm')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

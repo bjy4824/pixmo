@@ -30,6 +30,10 @@ interface Dict {
   statusExtracted: FnEntry
   statusNoSource: string
   btnStop: string
+  saveModalTitle: string
+  saveModalHint: string
+  btnCancel: string
+  btnConfirm: string
 }
 
 export const I18N: Record<Lang, Dict> = {
@@ -47,6 +51,7 @@ export const I18N: Record<Lang, Dict> = {
     statusLoaded: '사진 로드됨 — 팔레트 추출 중...', statusAnalyzing: '팔레트 분석 중...',
     statusExtracted: (k) => `${k}색 추출 완료`, statusNoSource: '카메라 또는 사진을 먼저 불러오세요',
     btnStop: '■ 정지',
+    saveModalTitle: '파일명', saveModalHint: '.png로 저장됩니다', btnCancel: '취소', btnConfirm: '저장',
   },
   en: {
     emptyHint: 'Transform photos into pixel art', emptyCam: 'Start Camera',
@@ -62,6 +67,7 @@ export const I18N: Record<Lang, Dict> = {
     statusLoaded: 'Photo loaded — extracting palette...', statusAnalyzing: 'Analyzing...',
     statusExtracted: (k) => `${k} colors extracted`, statusNoSource: 'Load a photo or start camera first',
     btnStop: '■ Stop',
+    saveModalTitle: 'Filename', saveModalHint: 'Saved as .png', btnCancel: 'Cancel', btnConfirm: 'Save',
   },
   ja: {
     emptyHint: '写真をピクセルアートに変換', emptyCam: 'カメラ起動',
@@ -77,6 +83,7 @@ export const I18N: Record<Lang, Dict> = {
     statusLoaded: '読込完了 — パレット抽出中...', statusAnalyzing: '解析中...',
     statusExtracted: (k) => `${k}色抽出完了`, statusNoSource: '写真またはカメラを先に起動してください',
     btnStop: '■ 停止',
+    saveModalTitle: 'ファイル名', saveModalHint: '.pngで保存', btnCancel: 'キャンセル', btnConfirm: '保存',
   },
   zh: {
     emptyHint: '将照片转换为像素艺术', emptyCam: '启动摄像头',
@@ -92,6 +99,7 @@ export const I18N: Record<Lang, Dict> = {
     statusLoaded: '图片已加载 — 提取调色板...', statusAnalyzing: '分析中...',
     statusExtracted: (k) => `已提取${k}种颜色`, statusNoSource: '请先加载图片或启动摄像头',
     btnStop: '■ 停止',
+    saveModalTitle: '文件名', saveModalHint: '保存为 .png', btnCancel: '取消', btnConfirm: '保存',
   },
   es: {
     emptyHint: 'Convierte fotos en pixel art', emptyCam: 'Iniciar cámara',
@@ -107,6 +115,7 @@ export const I18N: Record<Lang, Dict> = {
     statusLoaded: 'Foto cargada — extrayendo paleta...', statusAnalyzing: 'Analizando...',
     statusExtracted: (k) => `${k} colores extraídos`, statusNoSource: 'Carga una foto o inicia la cámara',
     btnStop: '■ Parar',
+    saveModalTitle: 'Nombre', saveModalHint: 'Se guarda como .png', btnCancel: 'Cancelar', btnConfirm: 'Guardar',
   },
   fr: {
     emptyHint: 'Transformez vos photos en pixel art', emptyCam: 'Démarrer caméra',
@@ -122,6 +131,7 @@ export const I18N: Record<Lang, Dict> = {
     statusLoaded: 'Photo chargée — extraction palette...', statusAnalyzing: 'Analyse...',
     statusExtracted: (k) => `${k} couleurs extraites`, statusNoSource: 'Chargez une photo ou démarrez la caméra',
     btnStop: '■ Arrêter',
+    saveModalTitle: 'Nom du fichier', saveModalHint: 'Enregistré en .png', btnCancel: 'Annuler', btnConfirm: 'Enregistrer',
   },
   de: {
     emptyHint: 'Fotos in Pixel Art verwandeln', emptyCam: 'Kamera starten',
@@ -137,6 +147,7 @@ export const I18N: Record<Lang, Dict> = {
     statusLoaded: 'Foto geladen — Palette wird extrahiert...', statusAnalyzing: 'Analysiere...',
     statusExtracted: (k) => `${k} Farben extrahiert`, statusNoSource: 'Bitte zuerst Foto laden oder Kamera starten',
     btnStop: '■ Stopp',
+    saveModalTitle: 'Dateiname', saveModalHint: 'Als .png speichern', btnCancel: 'Abbrechen', btnConfirm: 'Speichern',
   },
   pt: {
     emptyHint: 'Transforme fotos em pixel art', emptyCam: 'Iniciar câmera',
@@ -152,6 +163,7 @@ export const I18N: Record<Lang, Dict> = {
     statusLoaded: 'Foto carregada — extraindo paleta...', statusAnalyzing: 'Analisando...',
     statusExtracted: (k) => `${k} cores extraídas`, statusNoSource: 'Carregue uma foto ou inicie a câmera',
     btnStop: '■ Parar',
+    saveModalTitle: 'Nome do arquivo', saveModalHint: 'Salvo como .png', btnCancel: 'Cancelar', btnConfirm: 'Salvar',
   },
 }
 
