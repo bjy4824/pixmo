@@ -144,48 +144,40 @@ export default function PixelCamera() {
     const ctx = out.getContext('2d')!
     const pCtx = proc.getContext('2d')!
     const W = WRef.current, H = HRef.current
+    // Scale pixel size relative to canvas width so slider feels consistent across all image sizes
+    const pxSize = Math.max(1, Math.round(pixelSize * W / 320))
+    const cols = Math.ceil(W / pxSize)
+    const rows = Math.ceil(H / pxSize)
     const contrastDelta = contrast - 100
     const hueWeight = hueSensitivity / 100
     const satFactor = satBoost / 100
 
-    pCtx.drawImage(source, 0, 0, W, H)
-    const imageData = pCtx.getImageData(0, 0, W, H)
+    // Draw source downscaled — browser handles block averaging
+    pCtx.drawImage(source, 0, 0, cols, rows)
+    const imageData = pCtx.getImageData(0, 0, cols, rows)
     const data = imageData.data
 
     ctx.fillStyle = '#000'
     ctx.fillRect(0, 0, W, H)
 
     const pal = paletteRef.current
-    const presetMode = activePresetModeRef.current
-    const presetName = activePresetNameRef.current
 
-    for (let y = 0; y < H; y += pixelSize) {
-      for (let x = 0; x < W; x += pixelSize) {
-        const endX = Math.min(x + pixelSize, W)
-        const endY = Math.min(y + pixelSize, H)
-        let sumR = 0, sumG = 0, sumB = 0, count = 0
-        for (let py = y; py < endY; py++) {
-          for (let px = x; px < endX; px++) {
-            const idx = (py * W + px) * 4
-            sumR += data[idx]; sumG += data[idx + 1]; sumB += data[idx + 2]
-            count++
-          }
-        }
-        let cr = applyContrast(sumR / count, contrastDelta)
-        let cg = applyContrast(sumG / count, contrastDelta)
-        let cb = applyContrast(sumB / count, contrastDelta);
-        [cr, cg, cb] = boostSaturation(cr, cg, cb, satFactor)
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const idx = (row * cols + col) * 4
+        let cr = applyContrast(data[idx], contrastDelta)
+        let cg = applyContrast(data[idx + 1], contrastDelta)
+        let cb = applyContrast(data[idx + 2], contrastDelta)
+        ;[cr, cg, cb] = boostSaturation(cr, cg, cb, satFactor)
 
         const colorHex = nearestPaletteColor(cr, cg, cb, hueWeight, pal)
         let [fr, fg, fb] = hexToRgb(colorHex)
-        if (presetMode === 'filter' && presetName && FILTERS[presetName]) {
-          let [h, s, l] = rgbToHsl(fr, fg, fb);
-          [h, s, l] = FILTERS[presetName](h, s, l);
-          [fr, fg, fb] = hslToRgb(h, s, l)
-        }
         if (invertedRef.current) { fr = 255 - fr; fg = 255 - fg; fb = 255 - fb }
+
+        const x = col * pxSize
+        const y = row * pxSize
         ctx.fillStyle = `rgb(${fr},${fg},${fb})`
-        ctx.fillRect(x, y, endX - x, endY - y)
+        ctx.fillRect(x, y, Math.min(pxSize, W - x), Math.min(pxSize, H - y))
       }
     }
   }, [pixelSize, contrast, hueSensitivity, satBoost])
@@ -268,10 +260,24 @@ export default function PixelCamera() {
         setTimeout(kmeansStep, 0)
       } else {
         centroids.sort((a, b) => (0.299*a[0]+0.587*a[1]+0.114*a[2]) - (0.299*b[0]+0.587*b[1]+0.114*b[2]))
-        const newPalette = centroids.map(([r, g, b]) => {
-          const h = (v: number) => Math.round(v).toString(16).padStart(2, '0')
-          return '#' + h(r) + h(g) + h(b)
-        })
+        const toHex = (v: number) => Math.round(v).toString(16).padStart(2, '0')
+        const naturalPalette = centroids.map(([r, g, b]) => '#' + toHex(r) + toHex(g) + toHex(b))
+
+        // Apply filter to palette when a filter preset is active
+        let newPalette = naturalPalette
+        const curPresetMode = activePresetModeRef.current
+        const curPresetName = activePresetNameRef.current
+        if (curPresetMode === 'filter' && curPresetName && FILTERS[curPresetName]) {
+          const filterFn = FILTERS[curPresetName]
+          newPalette = naturalPalette.map(hex => {
+            const [r, g, b] = hexToRgb(hex)
+            let [h, s, l] = rgbToHsl(r, g, b)
+            ;[h, s, l] = filterFn(h, s, l)
+            const [nr, ng, nb] = hslToRgb(h, s, l)
+            return '#' + toHex(nr) + toHex(ng) + toHex(nb)
+          })
+        }
+
         paletteRef.current = newPalette
         setPalette(newPalette)
         if (modeRef.current === 'image' && sourceImageRef.current) {
