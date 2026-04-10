@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
+  verification: { google: 'B1rMvpOS-XYdPWJsr17YMW-9t_IF9U1PSBq40WA0o9k' },
   title: 'PIXMO — Pixel Art Camera & Photo Converter',
   description: 'Turn any photo into pixel art instantly. Free online pixel art camera with retro, pastel, neon, and earth tone filters. No app download needed.',
   keywords: ['pixel art', 'pixel camera', 'photo to pixel art', 'pixel converter', 'retro filter', 'pixel art maker', 'pixelate photo'],
